@@ -1,0 +1,191 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <string.h>
+
+struct patient{
+ int no;
+ char name[30];
+ int age;
+ struct patient *lptr,*rptr;
+};
+typedef struct patient node;
+node *start = NULL;
+
+void wel()
+{
+ printf("\n\n");
+ printf("\t\t\t **\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t * ---------------------------- *\n");
+ printf("\t\t\t * HOSPITAL APPOINTMENT SYSTEM *\n");
+ printf("\t\t\t * ---------------------------- *\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t **\n");
+ printf("\n\n");
+ printf("\t\t\t **\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t * ------------------------ *\n");
+ printf("\t\t\t * SET YOUR APPOINTMENT *\n");
+ printf("\t\t\t * ------------------------ *\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t * *\n");
+ printf("\t\t\t **\n");
+}
+
+
+void main()
+{   
+    wel();
+    int ch;
+    while(1)
+    {
+        printf("\n\t\tenter your choice\t\t\n");
+        
+        printf("\n1.Book an appointment\n2.Reschedule an appointment\n3.Delete an apointment\n4.Display all appointments\n5.Exit\t\t\n");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+           case 1: insert_rear();
+                   break;
+                   
+           case 2: res();
+                   break;
+           
+           case 3: delete();
+                   break;
+           
+           case 4: display();
+                   break;
+                   
+           case 5: exit(0);
+           
+           default: printf("invalid input\n");
+                    exit(0);
+        }
+    }
+    return 0;
+}
+
+node* create()
+{ 
+    node *new1;
+    new1 = (node*)malloc(sizeof(node));
+    printf("\n\t\tEnter appointment number,patient name,patient age\t\t\n");
+    scanf("%d%s%d",&new1->no,new1->name,&new1->age);
+    
+    new1->lptr = new1->rptr = NULL;
+    return(new1);
+}
+
+void create_nnodes()
+{ 
+	int n, i;
+	printf("Enter No. of Patients\n");  
+	scanf("%d",&n);
+	for(i = 1; i<=n; i++)
+		insert_rear();
+}
+
+void insert_rear()
+{  
+    node *new1, *temp = start;
+    new1 = create();
+    if (start == NULL)
+    {  
+        start = new1;
+        return;
+    }
+    while ( temp->rptr != NULL)
+        temp = temp->rptr;
+    temp->rptr = new1;
+    new1->lptr = temp;
+}
+
+
+void display()
+{ 
+    node *temp = start; int ct = 0;
+    if (start == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+    printf("Details of patients are \n");
+    while(temp != NULL)
+    {  
+        printf("%d %s %d\n",temp->no,temp->name,temp->age);
+        temp = temp->rptr;
+        ct++;
+    }
+    printf("\n no. of Patients = %d",ct);
+}
+
+void delete()
+{   
+    int r;
+    node *temp=start;
+     if (start == NULL)
+    {  
+        printf("List is empty\n");
+        return;
+    }
+
+    if (start->rptr == NULL)
+    {  
+        printf("Deleted appointment = %d\n",start->no);
+        free(start);
+        start = NULL;
+        return;
+    } 
+    printf("enter your appointment number\n");
+    scanf("%d",&r);
+    while(r!=temp->no)
+    {
+        temp=temp->rptr;
+    }
+    temp->lptr->rptr=temp->rptr;
+    temp->rptr->lptr=temp->lptr;
+    //temp=temp->lptr;
+    
+    while(temp->rptr!=NULL)
+    {
+        temp=temp->rptr;
+        temp->no=temp->no-1;
+        
+    }
+}
+
+void res()
+{
+    int r;
+    
+    printf("Enter your appointment number \n");
+    scanf("%d",&r);
+   
+
+    delete();
+       
+    node *new1, *temp = start;
+    new1 = create();
+    if (start == NULL)
+    {  
+        start = new1;
+        return;
+    }
+    while ( temp->rptr != NULL)
+    {
+        temp = temp->rptr;
+    }
+    
+    temp->rptr = new1;
+    new1->lptr=temp;
+    new1->rptr=NULL;
+    
+    
+    
+}
